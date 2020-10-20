@@ -9,7 +9,34 @@ class EditorAttestation extends StatefulWidget {
 }
 
 class _EditorAttestationState extends State<EditorAttestation> {
-  var selectedMotif = MotifValue.list[0];
+  var _selectedMotif = MotifValue.list[0];
+  var _birthdayDate = DateTime.now();
+  var _selectedDate = DateTime.now();
+
+  final _form = GlobalKey<FormState>();
+  final _numberNode = FocusNode();
+  final _addressNode = FocusNode();
+  final _cpNode = FocusNode();
+  final _cityNode = FocusNode();
+
+  final _formData = {
+    'name': '',
+    'number': 0,
+    'street': '',
+    'cp': 0,
+    'city': '',
+    'birthday': DateTime.now(),
+    'date': DateTime.now(),
+    'motif': Map,
+  };
+
+  Map getData() {
+    _form.currentState.save();
+    _formData['motif'] = _selectedMotif;
+    print('lskdjglksjdg lkfj  $_formData');
+
+    return _formData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +48,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
     return Padding(
       padding: const EdgeInsets.all(7.0),
       child: Form(
+        key: _form,
         child: ListView(
           physics: ClampingScrollPhysics(),
           children: [
@@ -28,6 +56,9 @@ class _EditorAttestationState extends State<EditorAttestation> {
             TextFormField(
               decoration: InputDecoration(labelText: "Mme/Mr"),
               textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(_numberNode),
+              onSaved: (value) => _formData['name'] = value,
             ),
             SizedBox(height: 25.0),
             Text('Née le'),
@@ -41,6 +72,10 @@ class _EditorAttestationState extends State<EditorAttestation> {
                     decoration: InputDecoration(labelText: "N°"),
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
+                    focusNode: _numberNode,
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(_addressNode),
+                    onSaved: (value) => _formData['number'] = value,
                   ),
                 ),
                 SizedBox(width: 13.0),
@@ -49,6 +84,10 @@ class _EditorAttestationState extends State<EditorAttestation> {
                   child: TextFormField(
                     decoration: InputDecoration(labelText: "Rue"),
                     textInputAction: TextInputAction.next,
+                    focusNode: _addressNode,
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(_cpNode),
+                    onSaved: (value) => _formData['street'] = value,
                   ),
                 ),
               ],
@@ -65,6 +104,10 @@ class _EditorAttestationState extends State<EditorAttestation> {
                     decoration: InputDecoration(labelText: "Code Postale"),
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
+                    focusNode: _cpNode,
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(_cityNode),
+                    onSaved: (value) => _formData['cp'] = value,
                   ),
                 ),
                 SizedBox(width: 13.0),
@@ -72,7 +115,9 @@ class _EditorAttestationState extends State<EditorAttestation> {
                   flex: 1,
                   child: TextFormField(
                     decoration: InputDecoration(labelText: "Ville"),
-                    textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.done,
+                    focusNode: _cityNode,
+                    onSaved: (value) => _formData['city'] = value,
                   ),
                 ),
               ],
@@ -80,7 +125,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
             Text('Motif :'),
             DropdownButton(
               isExpanded: true,
-              hint: Text('${selectedMotif['short']}'),
+              hint: Text('${_selectedMotif['short']}'),
               items: MotifValue.list
                   .map<DropdownMenuItem<Map>>(
                     (Map e) => DropdownMenuItem<Map>(
@@ -92,12 +137,12 @@ class _EditorAttestationState extends State<EditorAttestation> {
               onChanged: (Map i) {
                 //print('lskdjgslkdjg  $i $selectedMotif');
                 setState(() {
-                  selectedMotif = i;
+                  _selectedMotif = i;
                 });
               },
             ),
             Text(
-              '${selectedMotif['long']}',
+              '${_selectedMotif['long']}',
               style: TextStyle(
                 color: Colors.blueGrey[300],
                 fontSize: 13.0,

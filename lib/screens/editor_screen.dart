@@ -9,6 +9,8 @@ class EditorScreen extends StatefulWidget {
 }
 
 class _EditorScreenState extends State<EditorScreen> {
+  final editor = EditorAttestation();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,7 @@ class _EditorScreenState extends State<EditorScreen> {
           ),
         ),
       ),
-      body: EditorAttestation(),
+      body: editor,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _validForm(context),
         label: Text('Générer'),
@@ -34,6 +36,9 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   void _validForm(BuildContext ctx) {
+    final data = editor.state.getData();
+    print('sldkjglksjdglk 22222 $data');
+
     Navigator.of(ctx).pop();
   }
 }
