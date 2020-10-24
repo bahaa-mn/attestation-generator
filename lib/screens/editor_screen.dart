@@ -9,18 +9,23 @@ class EditorScreen extends StatefulWidget {
 }
 
 class _EditorScreenState extends State<EditorScreen> {
-  final editor = EditorAttestation();
-
   @override
   Widget build(BuildContext context) {
+    final Map args = ModalRoute.of(context).settings.arguments;
+
+    print('qskfllqksjglkqjglqsglkqjsglkjg $args');
+    final editor = EditorAttestation(m: args);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black,
+          color: Colors.blueGrey,
         ),
+        centerTitle: true,
+        elevation: 0.0,
         backgroundColor: Colors.white,
         title: Text(
-          'Creation attestation',
+          'Création attestation',
           style: TextStyle(
             color: Colors.blueGrey,
             fontWeight: FontWeight.bold,
@@ -29,16 +34,18 @@ class _EditorScreenState extends State<EditorScreen> {
       ),
       body: editor,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _validForm(context),
+        onPressed: () => _validForm(context, editor),
         label: Text('Générer'),
       ),
     );
   }
 
-  void _validForm(BuildContext ctx) {
-    final data = editor.state.getData();
-    print('sldkjglksjdglk 22222 $data');
+  void _validForm(BuildContext ctx, EditorAttestation editor) {
+    if (!editor.state.isFormValid()) return;
 
-    Navigator.of(ctx).pop();
+    final data = editor.state.getData();
+    // print('sldkjglksjdglk 22222 $data');
+
+    Navigator.of(ctx).pop(data);
   }
 }

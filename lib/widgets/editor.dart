@@ -1,41 +1,74 @@
+import 'dart:convert';
+
 import 'package:acfgen/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EditorAttestation extends StatefulWidget {
+  final Map m;
   final state = _EditorAttestationState();
+
+  EditorAttestation({this.m});
 
   @override
   _EditorAttestationState createState() => state;
 }
 
 class _EditorAttestationState extends State<EditorAttestation> {
+  var isModify = false;
   var _selectedMotif = MotifValue.list[0];
-  var _birthdayDate = DateTime.now();
-  var _selectedDate = DateTime.now();
 
   final _form = GlobalKey<FormState>();
-  final _numberNode = FocusNode();
+  final _birthDateNode = FocusNode();
+  final _birthCityNode = FocusNode();
   final _addressNode = FocusNode();
-  final _cpNode = FocusNode();
+  final _dateNode = FocusNode();
+  final _heureNode = FocusNode();
   final _cityNode = FocusNode();
 
+  final _nameController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _birthdayController = TextEditingController();
+  final _birthCityController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _dateController = TextEditingController();
+  final _heureController = TextEditingController();
+
   final _formData = {
-    'name': '',
-    'number': 0,
-    'street': '',
-    'cp': 0,
-    'city': '',
-    'birthday': DateTime.now(),
-    'date': DateTime.now(),
-    'motif': Map,
+    MapAttrs.name: '',
+    MapAttrs.addresse: '',
+    MapAttrs.birthday: '',
+    MapAttrs.birthCity: '',
+    MapAttrs.city: '',
+    MapAttrs.date: '',
+    MapAttrs.heure: '',
+    MapAttrs.motif: Map,
   };
 
-  Map getData() {
-    _form.currentState.save();
-    _formData['motif'] = _selectedMotif;
-    print('lskdjglksjdg lkfj  $_formData');
-
-    return _formData;
+  @override
+  void initState() {
+    Map m = widget.m;
+    print('sldkgslkgj SSEETT DDAATTAA $m');
+    if (m != null) {
+      _nameController.text = m[MapAttrs.name];
+      _addressController.text = m[MapAttrs.addresse];
+      _birthdayController.text = m[MapAttrs.birthday];
+      _birthCityController.text = m[MapAttrs.birthCity];
+      _cityController.text = m[MapAttrs.city];
+      _selectedMotif = m[MapAttrs.motif];
+      _dateController.text = m[MapAttrs.date];
+      _heureController.text = m[MapAttrs.heure];
+    } else {
+      _nameController.text = '';
+      _addressController.text = '';
+      _birthdayController.text = '';
+      _birthCityController.text = '';
+      _cityController.text = '';
+      _dateController.text =
+          '${DateFormat('dd.MM.yyyy').format(DateTime.now())}';
+      _heureController.text = '${DateFormat('HH:mm').format(DateTime.now())}';
+    }
+    super.initState();
   }
 
   @override
@@ -52,78 +85,110 @@ class _EditorAttestationState extends State<EditorAttestation> {
         child: ListView(
           physics: ClampingScrollPhysics(),
           children: [
-            SizedBox(height: h * 0.25),
+            SizedBox(height: h * 0.15),
             TextFormField(
+              controller: _nameController,
               decoration: InputDecoration(labelText: "Mme/Mr"),
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (_) =>
-                  FocusScope.of(context).requestFocus(_numberNode),
-              onSaved: (value) => _formData['name'] = value,
+                  FocusScope.of(context).requestFocus(_birthDateNode),
+              onSaved: (value) => _formData[MapAttrs.name] = value,
+              validator: _validField,
             ),
-            SizedBox(height: 25.0),
-            Text('Née le'),
-            SizedBox(height: 25.0),
-            Text('Adresse'),
+            SizedBox(height: 7.0),
             Row(
               children: [
                 Flexible(
                   flex: 1,
                   child: TextFormField(
-                    decoration: InputDecoration(labelText: "N°"),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
-                    focusNode: _numberNode,
+                    controller: _birthdayController,
+                    decoration: InputDecoration(labelText: 'Né le'),
+                    focusNode: _birthDateNode,
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(_birthCityNode),
+                    onSaved: (value) => _formData[MapAttrs.birthday] = value,
+                    validator: _validField,
+                  ),
+                ),
+                SizedBox(width: 7.0),
+                Flexible(
+                  flex: 2,
+                  child: TextFormField(
+                    controller: _birthCityController,
+                    decoration: InputDecoration(labelText: 'à'),
+                    focusNode: _birthCityNode,
                     onFieldSubmitted: (_) =>
                         FocusScope.of(context).requestFocus(_addressNode),
-                    onSaved: (value) => _formData['number'] = value,
-                  ),
-                ),
-                SizedBox(width: 13.0),
-                Flexible(
-                  flex: 7,
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Rue"),
-                    textInputAction: TextInputAction.next,
-                    focusNode: _addressNode,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_cpNode),
-                    onSaved: (value) => _formData['street'] = value,
+                    onSaved: (value) => _formData[MapAttrs.birthCity] = value,
+                    validator: _validField,
                   ),
                 ),
               ],
+            ),
+            SizedBox(height: 7.0),
+            TextFormField(
+              controller: _addressController,
+              decoration: InputDecoration(labelText: "Adresse"),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.text,
+              focusNode: _addressNode,
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(_cityNode),
+              onSaved: (value) => _formData[MapAttrs.addresse] = value,
+              validator: _validField,
+            ),
+            SizedBox(height: 7.0),
+            TextFormField(
+              controller: _cityController,
+              decoration: InputDecoration(
+                labelText: 'Fait à',
+                hintText: 'Ville',
+              ),
+              focusNode: _cityNode,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(_dateNode),
+              onSaved: (value) => _formData[MapAttrs.city] = value,
+              validator: _validField,
             ),
             Row(
               children: [
                 Flexible(
                   flex: 1,
-                  child: Container(),
-                ),
-                Flexible(
-                  flex: 1,
                   child: TextFormField(
-                    decoration: InputDecoration(labelText: "Code Postale"),
+                    controller: _dateController,
+                    decoration: InputDecoration(
+                      labelText: 'Fait le',
+                    ),
+                    focusNode: _dateNode,
                     textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
-                    focusNode: _cpNode,
                     onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_cityNode),
-                    onSaved: (value) => _formData['cp'] = value,
+                        FocusScope.of(context).requestFocus(_heureNode),
+                    onSaved: (value) => _formData[MapAttrs.date] = value,
+                    validator: _validField,
                   ),
                 ),
-                SizedBox(width: 13.0),
+                SizedBox(width: 7.0),
                 Flexible(
                   flex: 1,
                   child: TextFormField(
-                    decoration: InputDecoration(labelText: "Ville"),
+                    controller: _heureController,
+                    decoration: InputDecoration(
+                      labelText: 'à',
+                      hintText: 'Heure',
+                    ),
                     textInputAction: TextInputAction.done,
-                    focusNode: _cityNode,
-                    onSaved: (value) => _formData['city'] = value,
+                    focusNode: _heureNode,
+                    onSaved: (value) => _formData[MapAttrs.heure] = value,
+                    validator: _validField,
                   ),
                 ),
               ],
             ),
-            Text('Motif :'),
+            SizedBox(width: 7.0),
+            Text('Motif'),
             DropdownButton(
+              value: _selectedMotif,
               isExpanded: true,
               hint: Text('${_selectedMotif['short']}'),
               items: MotifValue.list
@@ -152,5 +217,18 @@ class _EditorAttestationState extends State<EditorAttestation> {
         ),
       ),
     );
+  }
+
+  String _validField(String value) =>
+      value.length == 0 ? 'Ce champs est obligatoire' : null;
+
+  bool isFormValid() => _form.currentState.validate();
+
+  Map getData() {
+    _form.currentState.save();
+    _formData['motif'] = _selectedMotif;
+    // print('lskdjglksjdg lkfj  $_formData');
+
+    return _formData;
   }
 }
