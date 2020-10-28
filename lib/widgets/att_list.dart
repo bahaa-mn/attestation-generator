@@ -1,18 +1,17 @@
 import 'dart:io';
 
-import 'package:acfgen/screens/home_screen.dart';
-import 'package:acfgen/screens/print_screen.dart';
-import 'package:acfgen/utils/formtateurs.dart';
 import 'package:flutter/material.dart';
 
 import 'package:path_provider/path_provider.dart';
 
-import 'package:acfgen/screens/editor_screen.dart';
-import 'package:acfgen/utils/constants.dart';
-import 'package:acfgen/widgets/att_item.dart';
-import 'package:acfgen/widgets/pdf_viewer.dart';
+import '../screens/print_screen.dart';
+import '../utils/formtateurs.dart';
+import '../screens/home_screen.dart';
+import '../utils/constants.dart';
+import './att_item.dart';
+import './pdf_viewer.dart';
 
-class AttestationList extends StatelessWidget {
+class AttestationList extends StatefulWidget {
   final List<Map> list;
   final Function(Map old, Map m) modify;
   final Function(Map m) remove;
@@ -26,14 +25,23 @@ class AttestationList extends StatelessWidget {
   });
 
   @override
+  _AttestationListState createState() => _AttestationListState();
+}
+
+class _AttestationListState extends State<AttestationList> {
+  var _isPreviewOpen = false;
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Center(
         child: ListView.builder(
-          itemCount: list.length,
+          itemCount: widget.list.length,
           itemBuilder: (context, i) => GestureDetector(
-            child: AttestationItem(attestation: list[i]),
-            onTap: () => _onItemTap(context, list[i]),
+            child: AttestationItem(attestation: widget.list[i]),
+            onTap: _isPreviewOpen
+                ? null
+                : () => _onItemTap(context, widget.list[i]),
           ),
         ),
       ),
@@ -41,17 +49,20 @@ class AttestationList extends StatelessWidget {
   }
 
   void _onItemTap(BuildContext context, Map m) async {
+    _isPreviewOpen = true;
     Navigator.of(context).popUntil(ModalRoute.withName(Home.routeName));
-    togglePreviewOpen(true, m);
-    await showBottomSheet(
+    widget.togglePreviewOpen(true, m);
+    final sheet = showBottomSheet(
       context: context,
       builder: (context) => AttestPreview(
         m: m,
-        modify: modify,
-        remove: remove,
+        modify: widget.modify,
+        remove: widget.remove,
       ),
-    ).closed;
-    togglePreviewOpen(false, m);
+    );
+    await sheet.closed;
+    widget.togglePreviewOpen(false, m);
+    _isPreviewOpen = false;
   }
 }
 
@@ -77,6 +88,7 @@ class AttestPreview extends StatelessWidget {
         borderRadius: BorderRadius.circular(13.0),
         color: Colors.blueGrey[50],
       ),
+      // height: h,
       width: w,
       padding: const EdgeInsets.only(
         left: 17.0,
@@ -93,15 +105,15 @@ class AttestPreview extends StatelessWidget {
             RichText(
               textAlign: TextAlign.left,
               text: TextSpan(
-                text: '${m[MapAttrs.date]} ',
+                text: '${Formats.date(m[MapAttrs.date])} ',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.black87,
                   fontSize: 23.0,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
                   TextSpan(
-                    text: '${m[MapAttrs.heure]}',
+                    text: '${Formats.heure(m[MapAttrs.heure])}',
                     style: TextStyle(
                       color: Colors.black38,
                       fontSize: 17.0,
@@ -114,18 +126,18 @@ class AttestPreview extends StatelessWidget {
             SizedBox(height: 33),
             RichText(
               text: TextSpan(
-                text: 'Mme/Mr \t',
+                text: '${m[MapAttrs.name]}  ',
                 style: TextStyle(
-                  color: Colors.blueGrey[500],
-                  fontSize: 13.0,
+                  color: Colors.black87,
+                  fontSize: 25.0,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
                   TextSpan(
-                    text: '${m[MapAttrs.name]}',
+                    text: 'Mme/Mr',
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25.0,
+                      color: Colors.blueGrey[500],
+                      fontSize: 13.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -135,18 +147,18 @@ class AttestPreview extends StatelessWidget {
             SizedBox(height: 33),
             RichText(
               text: TextSpan(
-                text: 'Motif \t',
+                text: '${m[MapAttrs.motif]['short']} ',
                 style: TextStyle(
-                  color: Colors.blueGrey[500],
-                  fontSize: 13.0,
+                  color: Colors.black87,
+                  fontSize: 25.0,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
                   TextSpan(
-                    text: '${m[MapAttrs.motif]['short']}',
+                    text: 'Motif',
                     style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 25.0,
+                      color: Colors.blueGrey[500],
+                      fontSize: 13.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

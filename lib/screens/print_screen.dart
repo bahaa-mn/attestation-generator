@@ -1,11 +1,12 @@
-import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:acfgen/utils/pdf_creator.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+
+import '../utils/formtateurs.dart';
+import '../utils/pdf_creator.dart';
 
 class PrintPDF extends StatefulWidget {
   final Map data;
@@ -17,10 +18,9 @@ class PrintPDF extends StatefulWidget {
 }
 
 class _PrintPDFState extends State<PrintPDF> {
-  static const title = 'Imprimer';
-
   @override
   Widget build(BuildContext context) {
+    final title = Formats.fileName(widget.data);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -33,8 +33,18 @@ class _PrintPDFState extends State<PrintPDF> {
         ),
         body: PdfPreview(
           canChangePageFormat: false,
+          // actions: [
+          //   PdfPreviewAction(
+          //     icon: Icon(Icons.print),
+          //     onPressed: (ctx, pdf, format) async {
+          //       await Printing.layoutPdf(
+          //         onLayout: (format) async => _generatePdf(format, title),
+          //       );
+          //     },
+          //   ),
+          // ],
           build: (format) => _generatePdf(format, title),
-          onPrinted: (context) {},
+          // onPrinted: (context) {},
         ),
       ),
     );

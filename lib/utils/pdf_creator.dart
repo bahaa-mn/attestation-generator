@@ -1,10 +1,11 @@
-import 'package:acfgen/utils/constants.dart';
-import 'package:pdf/pdf.dart';
 import 'dart:io';
+
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../utils/formtateurs.dart';
+import '../utils/constants.dart';
 
 class PdfGenerator {
   static reportView(context, Map data) async {
@@ -14,6 +15,7 @@ class PdfGenerator {
     );
     final subtitleStyle = TextStyle(fontSize: 11.0);
     final infoStyle = TextStyle(fontSize: 14.0);
+    final userInfoStyle = infoStyle.copyWith(fontWeight: FontWeight.bold);
 
     final Document pdf = Document();
 
@@ -28,7 +30,7 @@ class PdfGenerator {
     pdf.addPage(
       Page(
         pageFormat: PdfPageFormat.a4,
-        margin: const EdgeInsets.all(13.0),
+        margin: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 30.0),
         build: (Context context) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,12 +55,32 @@ class PdfGenerator {
                   ),
                   SizedBox(height: 23.0),
                   Text('Je soussigné(e),', style: infoStyle),
-                  Text('Mme/M. : $name', style: infoStyle),
-                  Text(
+                  Row(
+                    children: [
+                      Text('Mme/M. : ', style: infoStyle),
+                      Text('$name', style: userInfoStyle),
+                    ],
+                  ),
+                  // Text('Mme/M. : $name', style: userInfoStyle),
+                  Row(
+                    children: [
+                      Text('Né(e) le : ', style: infoStyle),
+                      Text('$birthday', style: userInfoStyle),
+                      Text('\t à : ', style: infoStyle),
+                      Text('$birthCity', style: userInfoStyle),
+                    ],
+                  ),
+                  /* Text(
                     'Né(e) le : $birthday \t à : $birthCity',
                     style: infoStyle,
+                  ), */
+                  Row(
+                    children: [
+                      Text('Demeurant : ', style: infoStyle),
+                      Text('$addresse', style: userInfoStyle),
+                    ],
                   ),
-                  Text('Demeurant : $addresse', style: infoStyle),
+                  // Text('Demeurant : $addresse', style: infoStyle),
                   SizedBox(height: 23.0),
                   Text(
                     'certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé en application des mesures générales nécessaires pour faire face à l\'épidémie de Covid19 dans le cadre de l\'état d\'urgence sanitaire¹ :',
@@ -91,12 +113,26 @@ class PdfGenerator {
                     },
                   ).toList(),
                   SizedBox(height: 23),
-                  Text('Fait à : $ville', style: infoStyle),
+                  Row(
+                    children: [
+                      Text('Fait à : ', style: infoStyle),
+                      Text('$ville', style: userInfoStyle),
+                    ],
+                  ),
+                  // Text('Fait à : $ville', style: infoStyle),
                   SizedBox(height: 13.0),
-                  Text(
+                  Row(
+                    children: [
+                      Text('Le : ', style: infoStyle),
+                      Text('$date', style: userInfoStyle),
+                      Text(' à : ', style: infoStyle),
+                      Text('$heure', style: userInfoStyle),
+                    ],
+                  ),
+                  /* Text(
                     'Le : $date à : $heure',
                     style: infoStyle,
-                  ),
+                  ), */
                   Text(
                     '(Date et heure de début de sortie à mentionner obligatoirement)',
                     style: subtitleStyle,

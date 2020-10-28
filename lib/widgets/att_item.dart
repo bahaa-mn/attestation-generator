@@ -1,4 +1,5 @@
 import 'package:acfgen/utils/constants.dart';
+import 'package:acfgen/utils/formtateurs.dart';
 import 'package:flutter/material.dart';
 
 class AttestationItem extends StatelessWidget {
@@ -10,7 +11,7 @@ class AttestationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text('${attestation[MapAttrs.date]}'),
+        title: Text('${Formats.date(attestation[MapAttrs.date])}'),
         subtitle: Text('${attestation[MapAttrs.motif]['short']}'),
       ),
     );
