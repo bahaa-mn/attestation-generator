@@ -114,6 +114,11 @@ class PdfGenerator {
         },
       ),
     );
+    return pdf;
+  }
+
+  static void saveFile(context, Map data) async {
+    final pdf = await reportView(context, data);
 
     final fileName = Formats.fileName(data);
     final String dir = (await getApplicationDocumentsDirectory()).path;

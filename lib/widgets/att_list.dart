@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:acfgen/screens/home_screen.dart';
+import 'package:acfgen/screens/print_screen.dart';
 import 'package:acfgen/utils/formtateurs.dart';
 import 'package:flutter/material.dart';
 
@@ -198,7 +199,7 @@ class AttestPreview extends StatelessWidget {
                           Icon(Icons.print),
                         ],
                       ),
-                      onPressed: () => _openPDF(context),
+                      onPressed: () => _printPDF(context),
                     ),
                   ),
                 ),
@@ -227,6 +228,18 @@ class AttestPreview extends StatelessWidget {
     return Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => PdfViewerPage(path: path),
+      ),
+    );
+  }
+
+  _printPDF(BuildContext context) async {
+    final fileName = Formats.fileName(m);
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+    final String path = '$dir/$fileName.pdf';
+    // print("zlkgjzlekjglksd   \t $path");
+    return Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PrintPDF(data: m),
       ),
     );
   }

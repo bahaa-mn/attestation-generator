@@ -1,6 +1,7 @@
-import 'package:acfgen/screens/editor_screen.dart';
-import 'package:acfgen/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+
+import './screens/editor_screen.dart';
+import './screens/home_screen.dart';
 
 void main() {
   runApp(MyApp());

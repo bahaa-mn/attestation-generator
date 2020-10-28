@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
     final res = await Navigator.of(context).pushNamed(EditorScreen.routeName);
     // print('$res');
     if (res == null) return;
-    PdfGenerator.reportView(context, res);
+    PdfGenerator.saveFile(context, res);
     setState(() {
       _list.add(res);
     });
@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
     setState(() {
       final i = _list.indexOf(old);
       _list[i] = m;
-      PdfGenerator.reportView(context, m);
+      PdfGenerator.saveFile(context, m);
     });
   }
 
