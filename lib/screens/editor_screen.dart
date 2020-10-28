@@ -13,7 +13,7 @@ class _EditorScreenState extends State<EditorScreen> {
   Widget build(BuildContext context) {
     final Map args = ModalRoute.of(context).settings.arguments;
 
-    print('qskfllqksjglkqjglqsglkqjsglkjg $args');
+    // print('qskfllqksjglkqjglqsglkqjsglkjg $args');
     final editor = EditorAttestation(m: args);
 
     return Scaffold(
@@ -25,7 +25,7 @@ class _EditorScreenState extends State<EditorScreen> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: Text(
-          'Création attestation',
+          'Nouvelle attestation',
           style: TextStyle(
             color: Colors.blueGrey,
             fontWeight: FontWeight.bold,
@@ -42,10 +42,7 @@ class _EditorScreenState extends State<EditorScreen> {
 
   void _validForm(BuildContext ctx, EditorAttestation editor) {
     if (!editor.state.isFormValid()) return;
-
     final data = editor.state.getData();
-    // print('sldkjglksjdglk 22222 $data');
-
     Navigator.of(ctx).pop(data);
   }
 }

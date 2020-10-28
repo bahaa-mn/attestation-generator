@@ -7,9 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import '../utils/formtateurs.dart';
 
 class PdfGenerator {
-  static String getFileName(Map data) =>
-      '${data[MapAttrs.motif]['short']}_${Formats.date(data[MapAttrs.date])}_${Formats.heure(data[MapAttrs.heure])}';
-
   static reportView(context, Map data) async {
     final mainTitleStyle = TextStyle(
       fontSize: 19.0,
@@ -40,10 +37,14 @@ class PdfGenerator {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    "ATTESTATION DE DÉPLACEMENT DÉROGATOIRE",
-                    textAlign: TextAlign.center,
-                    style: mainTitleStyle,
+                  Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: Text(
+                      "ATTESTATION DE DÉPLACEMENT DÉROGATOIRE",
+                      textAlign: TextAlign.center,
+                      style: mainTitleStyle,
+                    ),
                   ),
                   Text(
                     "En application de l'article 51 du décret n° 2020-1262 du 16 octobre 2020 prescrivant les mesures générales nécessaires pour faire face à l'épidémie de covid-19 dans le cadre de l'état d'urgence sanitaire",
@@ -114,9 +115,9 @@ class PdfGenerator {
       ),
     );
 
-    final fileName = getFileName(data);
+    final fileName = Formats.fileName(data);
     final String dir = (await getApplicationDocumentsDirectory()).path;
-    final String path = '$dir/test.pdf';
+    final String path = '$dir/$fileName.pdf';
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
   }

@@ -53,12 +53,13 @@ class MotifValue {
 }
 
 class MapAttrs {
-  static const name = "name";
-  static const addresse = "adresse";
-  static const birthday = "birthday";
-  static const birthCity = "birth-city";
-  static const date = "date";
-  static const heure = "heure";
-  static const city = "city";
-  static const motif = "motif";
+  static const name = 'name';
+  static const addresse = 'adresse';
+  static const birthday = 'birthday';
+  static const birthCity = 'birth-city';
+  static const date = 'date';
+  static const heure = 'heure';
+  static const city = 'city';
+  static const motif = 'motif';
+  static const lastModif = 'last-modification';
 }

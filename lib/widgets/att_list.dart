@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:acfgen/screens/home_screen.dart';
+import 'package:acfgen/utils/formtateurs.dart';
 import 'package:flutter/material.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -13,11 +15,13 @@ class AttestationList extends StatelessWidget {
   final List<Map> list;
   final Function(Map old, Map m) modify;
   final Function(Map m) remove;
+  final Function(bool open, Map m) togglePreviewOpen;
 
   AttestationList({
     @required this.list,
     @required this.remove,
     @required this.modify,
+    @required this.togglePreviewOpen,
   });
 
   @override
@@ -35,15 +39,18 @@ class AttestationList extends StatelessWidget {
     );
   }
 
-  void _onItemTap(BuildContext context, Map m) {
-    showBottomSheet(
+  void _onItemTap(BuildContext context, Map m) async {
+    Navigator.of(context).popUntil(ModalRoute.withName(Home.routeName));
+    togglePreviewOpen(true, m);
+    await showBottomSheet(
       context: context,
       builder: (context) => AttestPreview(
         m: m,
-        modify: this.modify,
-        remove: this.remove,
+        modify: modify,
+        remove: remove,
       ),
-    );
+    ).closed;
+    togglePreviewOpen(false, m);
   }
 }
 
@@ -129,7 +136,7 @@ class AttestPreview extends StatelessWidget {
               text: TextSpan(
                 text: 'Motif \t',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.blueGrey[500],
                   fontSize: 13.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -154,32 +161,57 @@ class AttestPreview extends StatelessWidget {
               ),
             ),
             SizedBox(height: 13.0),
-            FlatButton(
-              child: Text('Voir le pdf'),
-              onPressed: () => _openPDF(context),
-            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                FlatButton(
-                  minWidth: 0.3 * w,
-                  onPressed: () => _modify(context),
-                  child: Text(
-                    'Modifer',
-                    style: TextStyle(color: Colors.white),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+                    constraints: BoxConstraints(maxHeight: 35),
+                    child: FlatButton(
+                      color: Colors.blueGrey[100],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Apperçu'),
+                          Icon(Icons.insert_drive_file),
+                        ],
+                      ),
+                      onPressed: () => _openPDF(context),
+                    ),
                   ),
-                  color: Colors.blueGrey[200],
                 ),
-                FlatButton(
-                  minWidth: 0.3 * w,
-                  onPressed: () => remove(m),
-                  child: Text(
-                    'Supprimer',
-                    style: TextStyle(color: Colors.white),
+                SizedBox(width: 17.0),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: FlatButton(
+                      color: Colors.blueGrey[100],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Imprimer'),
+                          Icon(Icons.print),
+                        ],
+                      ),
+                      onPressed: () => _openPDF(context),
+                    ),
                   ),
-                  color: Colors.red[300],
                 ),
               ],
+            ),
+            SizedBox(height: 17.0),
+            FlatButton(
+              onPressed: () => remove(m),
+              child: Text(
+                'Supprimer',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.redAccent,
             ),
           ],
         ),
@@ -187,18 +219,11 @@ class AttestPreview extends StatelessWidget {
     );
   }
 
-  void _modify(BuildContext context) async {
-    final newM = await Navigator.of(context).pushNamed(
-      EditorScreen.routeName,
-      arguments: m,
-    );
-    if (newM != null) modify(m, newM);
-    Navigator.pop(context);
-  }
-
   _openPDF(BuildContext context) async {
+    final fileName = Formats.fileName(m);
     final String dir = (await getApplicationDocumentsDirectory()).path;
-    final String path = '$dir/test.pdf';
+    final String path = '$dir/$fileName.pdf';
+    // print("zlkgjzlekjglksd   \t $path");
     return Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => PdfViewerPage(path: path),

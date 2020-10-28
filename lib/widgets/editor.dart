@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../utils/constants.dart';
 import '../utils/formtateurs.dart';
@@ -32,11 +31,8 @@ class _EditorAttestationState extends State<EditorAttestation> {
 
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
-  // final _birthdayController = TextEditingController();
   final _birthCityController = TextEditingController();
   final _cityController = TextEditingController();
-  // final _dateController = TextEditingController();
-  // final _heureController = TextEditingController();
 
   final _formData = {
     MapAttrs.name: '',
@@ -47,12 +43,18 @@ class _EditorAttestationState extends State<EditorAttestation> {
     MapAttrs.date: DateTime.now(),
     MapAttrs.heure: TimeOfDay.now(),
     MapAttrs.motif: Map,
+    MapAttrs.lastModif: DateTime.now(),
   };
+
+  final inputBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(7.0),
+    borderSide: BorderSide(width: 1.0),
+  );
 
   @override
   void initState() {
     Map m = widget.m;
-    print('sldkgslkgj SSEETT DDAATTAA $m');
+
     if (m != null) {
       _nameController.text = m[MapAttrs.name];
       _addressController.text = m[MapAttrs.addresse];
@@ -94,7 +96,10 @@ class _EditorAttestationState extends State<EditorAttestation> {
             SizedBox(height: h * 0.15),
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: "Mme/Mr"),
+              decoration: InputDecoration(
+                labelText: "Mme/Mr",
+                border: inputBorder,
+              ),
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (_) =>
                   FocusScope.of(context).requestFocus(_birthCityNode),
@@ -103,46 +108,44 @@ class _EditorAttestationState extends State<EditorAttestation> {
             ),
             SizedBox(height: 7.0),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'Né(e) le :',
-                  style: TextStyle(),
-                ),
                 Flexible(
                   flex: 1,
+                  child: Text(
+                    'Né(e) le :',
+                    style: TextStyle(),
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
                   child: TextButton(
                     child: Text(Formats.date(_selectedBirthDate)),
                     onPressed: () async {
                       final currYear = DateTime.now().year;
                       final date = await showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
+                        initialDate: _selectedBirthDate,
                         firstDate: DateTime(1900),
                         lastDate: DateTime(currYear + 1),
                       );
+                      if (date == null) return;
                       setState(() {
                         _selectedBirthDate = date;
                       });
                     },
                   ),
-                  /*TextFormField(
-                    controller: _birthdayController,
-                    decoration: InputDecoration(labelText: 'Né le'),
-                    focusNode: _birthDateNode,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_birthCityNode),
-                    onSaved: (value) => _formData[MapAttrs.birthday] = value,
-                    validator: _validField,
-                  ),*/
                 ),
-                SizedBox(width: 7.0),
                 Flexible(
-                  flex: 2,
+                  flex: 3,
                   child: TextFormField(
                     controller: _birthCityController,
-                    decoration: InputDecoration(labelText: 'à',hintText: 'Ville'),
+                    decoration: InputDecoration(
+                      labelText: 'à',
+                      hintText: 'Ville',
+                      border: inputBorder,
+                    ),
                     textInputAction: TextInputAction.next,
                     focusNode: _birthCityNode,
                     onFieldSubmitted: (_) =>
@@ -156,7 +159,10 @@ class _EditorAttestationState extends State<EditorAttestation> {
             SizedBox(height: 7.0),
             TextFormField(
               controller: _addressController,
-              decoration: InputDecoration(labelText: "Adresse"),
+              decoration: InputDecoration(
+                labelText: "Adresse",
+                border: inputBorder,
+              ),
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.text,
               focusNode: _addressNode,
@@ -171,6 +177,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
               decoration: InputDecoration(
                 labelText: 'Fait à',
                 hintText: 'Ville',
+                border: inputBorder,
               ),
               focusNode: _cityNode,
               textInputAction: TextInputAction.done,
@@ -179,101 +186,107 @@ class _EditorAttestationState extends State<EditorAttestation> {
               onSaved: (value) => _formData[MapAttrs.city] = value,
               validator: _validField,
             ),
+            SizedBox(height: 7.0),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      'Date',
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      'Heure',
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Row(
               children: [
                 Flexible(
                   flex: 1,
-                  child: Text('Date'),
-                ),
-                Flexible(
-                  flex: 3,
-                  child: TextButton(
-                    child: Text(Formats.date(_selectedDate)),
-                    onPressed: () async {
-                      final currYear = DateTime.now().year;
-                      final date = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(currYear + 1),
-                      );
-                      setState(() {
-                        _selectedBirthDate = date;
-                      });
-                    },
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: Text('Heure'),
-                ),
-                Flexible(
-                  flex: 3,
-                  child: TextButton(
-                    child: Text(Formats.heure(_selectedHeure)),
-                    onPressed: () async {
-                      final hour = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      );
-                      setState(() {
-                        _selectedHeure = hour;
-                      });
-                    },
-                  ),
-                ),
-                /* Flexible(
-                  flex: 1,
-                  child: TextFormField(
-                    controller: _dateController,
-                    decoration: InputDecoration(
-                      labelText: 'Fait le',
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      child: Text(Formats.date(_selectedDate)),
+                      onPressed: () async {
+                        final currYear = DateTime.now().year;
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: _selectedDate,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(currYear + 1),
+                        );
+                        if (date == null) return;
+                        setState(() {
+                          _selectedDate = date;
+                        });
+                      },
                     ),
-                    focusNode: _dateNode,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_heureNode),
-                    onSaved: (value) => _formData[MapAttrs.date] = value,
-                    validator: _validField,
                   ),
                 ),
-                SizedBox(width: 7.0),
                 Flexible(
                   flex: 1,
-                  child: TextFormField(
-                    controller: _heureController,
-                    decoration: InputDecoration(
-                      labelText: 'à',
-                      hintText: 'Heure',
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      child: Text(Formats.heure(_selectedHeure)),
+                      onPressed: () async {
+                        final hour = await showTimePicker(
+                          context: context,
+                          initialTime: _selectedHeure,
+                        );
+                        if (hour == null) return;
+                        setState(() {
+                          _selectedHeure = hour;
+                        });
+                      },
                     ),
-                    textInputAction: TextInputAction.done,
-                    focusNode: _heureNode,
-                    onSaved: (value) => _formData[MapAttrs.heure] = value,
-                    validator: _validField,
                   ),
-                ), */
+                ),
               ],
             ),
             SizedBox(height: 7.0),
-            Text('Motif'),
-            DropdownButton(
-              value: _selectedMotif,
-              isExpanded: true,
-              hint: Text('${_selectedMotif['short']}'),
-              items: MotifValue.list
-                  .map<DropdownMenuItem<Map>>(
-                    (Map e) => DropdownMenuItem<Map>(
-                      value: e,
-                      child: Text('${e['short']}'),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (Map i) {
-                //print('lskdjgslkdjg  $i $selectedMotif');
-                setState(() {
-                  _selectedMotif = i;
-                });
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(flex: 1, child: Text('Motif')),
+                Flexible(
+                  flex: 5,
+                  child: DropdownButton(
+                    value: _selectedMotif,
+                    isExpanded: true,
+                    hint: Text('${_selectedMotif['short']}'),
+                    items: MotifValue.list
+                        .map<DropdownMenuItem<Map>>(
+                          (Map e) => DropdownMenuItem<Map>(
+                            value: e,
+                            child: Text('${e['short']}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (Map i) {
+                      //print('lskdjgslkdjg  $i $selectedMotif');
+                      setState(() {
+                        _selectedMotif = i;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
             Text(
               '${_selectedMotif['long']}',
@@ -291,7 +304,24 @@ class _EditorAttestationState extends State<EditorAttestation> {
   String _validField(String value) =>
       value.length == 0 ? 'Ce champs est obligatoire' : null;
 
-  bool isFormValid() => _form.currentState.validate();
+  bool isFormValid() {
+    if (_form == null) {
+      Navigator.of(context).pop();
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Une erreur est survenue, veuillez réessayer.',
+            style: TextStyle(
+              color: Colors.redAccent,
+            ),
+          ),
+          backgroundColor: Colors.white,
+        ),
+      );
+      return false;
+    }
+    return _form.currentState.validate();
+  }
 
   Map getData() {
     _form.currentState.save();
@@ -299,6 +329,8 @@ class _EditorAttestationState extends State<EditorAttestation> {
     _formData[MapAttrs.date] = _selectedDate;
     _formData[MapAttrs.heure] = _selectedHeure;
     _formData[MapAttrs.birthday] = _selectedBirthDate;
+
+    _formData[MapAttrs.lastModif] = DateTime.now();
 
     // print('lskdjglksjdg lkfj  $_formData');
 

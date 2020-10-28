@@ -14,6 +14,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _list = <Map>[];
 
+  var _isPreviewOpen = false;
+  Map _previewedAttest;
+  //check if preview open to change the floating action button usage
+
   @override
   void initState() {
     // get data from memory to set the list
@@ -22,8 +26,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -44,10 +46,11 @@ class _HomeState extends State<Home> {
         list: _list,
         remove: _removeAttestation,
         modify: _modifyAttestation,
+        togglePreviewOpen: _toggleIsPreviewOpen,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _newAttestation,
-        child: Icon(Icons.add),
+        onPressed: _isPreviewOpen ? () => _modify(context) : _newAttestation,
+        child: Icon(_isPreviewOpen ? Icons.mode_edit : Icons.add),
       ),
     );
   }
@@ -71,7 +74,7 @@ class _HomeState extends State<Home> {
   }
 
   void _removeAttestation(Map m) async {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     final del = await showDialog<bool>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -83,11 +86,11 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Text(
                   'Êtes vous sûr de vouloir supprimer cette attestation ?',
-                  style: TextStyle(fontSize: 15.0),
+                  style: TextStyle(fontSize: 17.0),
                 ),
                 Text(
                   'Cette action est irréversible.',
-                  style: TextStyle(fontSize: 11.0),
+                  style: TextStyle(fontSize: 13.0),
                 ),
               ],
             ),
@@ -112,10 +115,30 @@ class _HomeState extends State<Home> {
         );
       },
     );
-    print('returned value dialog : $del');
-    if (del)
+    // print('returned value dialog : $del');
+    if (del) {
+      Navigator.pop(context);
       setState(() {
         _list.remove(m);
       });
+    }
+  }
+
+  void _toggleIsPreviewOpen(bool open, Map m) {
+    print('toggle preview open $open  \n$m');
+    _isPreviewOpen = open;
+    if (open && m != null) _previewedAttest = m;
+    setState(() {});
+  }
+
+  void _modify(BuildContext context) async {
+    Navigator.pop(context);
+    final newM = await Navigator.of(context).pushNamed(
+      EditorScreen.routeName,
+      arguments: _previewedAttest,
+    );
+    _toggleIsPreviewOpen(false, newM);
+    if (newM == null) return;
+    _modifyAttestation(_previewedAttest, newM);
   }
 }
