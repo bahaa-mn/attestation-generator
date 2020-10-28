@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
+import 'package:path_provider/path_provider.dart';
+
 import 'package:acfgen/screens/editor_screen.dart';
 import 'package:acfgen/utils/constants.dart';
 import 'package:acfgen/widgets/att_item.dart';
-import 'package:flutter/material.dart';
+import 'package:acfgen/widgets/pdf_viewer.dart';
 
 class AttestationList extends StatelessWidget {
   final List<Map> list;
@@ -71,110 +77,112 @@ class AttestPreview extends StatelessWidget {
         bottom: 7.0,
       ),
       margin: const EdgeInsets.all(7.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              RichText(
-                textAlign: TextAlign.left,
-                text: TextSpan(
-                  text: '${m[MapAttrs.date]} ',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 23.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: '${m[MapAttrs.heure]}',
-                      style: TextStyle(
-                        color: Colors.black38,
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 33),
-              RichText(
-                text: TextSpan(
-                  text: 'Mme/Mr \t',
-                  style: TextStyle(
-                    color: Colors.blueGrey[500],
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: '${m[MapAttrs.name]}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 33),
-              RichText(
-                text: TextSpan(
-                  text: 'Motif \t',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: '${m[MapAttrs.motif]['short']}',
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                '${m[MapAttrs.motif]['long']}',
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            RichText(
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                text: '${m[MapAttrs.date]} ',
                 style: TextStyle(
-                  color: Colors.black38,
-                  fontSize: 15.0,
+                  color: Colors.black,
+                  fontSize: 23.0,
                   fontWeight: FontWeight.bold,
                 ),
+                children: [
+                  TextSpan(
+                    text: '${m[MapAttrs.heure]}',
+                    style: TextStyle(
+                      color: Colors.black38,
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FlatButton(
-                minWidth: 0.3 * w,
-                onPressed: () => _modify(context),
-                child: Text(
-                  'Modifer',
-                  style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(height: 33),
+            RichText(
+              text: TextSpan(
+                text: 'Mme/Mr \t',
+                style: TextStyle(
+                  color: Colors.blueGrey[500],
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                color: Colors.blueGrey[200],
+                children: [
+                  TextSpan(
+                    text: '${m[MapAttrs.name]}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-              FlatButton(
-                minWidth: 0.3 * w,
-                onPressed: () => remove(m),
-                child: Text(
-                  'Supprimer',
-                  style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(height: 33),
+            RichText(
+              text: TextSpan(
+                text: 'Motif \t',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                color: Colors.red[300],
+                children: [
+                  TextSpan(
+                    text: '${m[MapAttrs.motif]['short']}',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+            Text(
+              '${m[MapAttrs.motif]['long']}',
+              style: TextStyle(
+                color: Colors.black38,
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 13.0),
+            FlatButton(
+              child: Text('Voir le pdf'),
+              onPressed: () => _openPDF(context),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FlatButton(
+                  minWidth: 0.3 * w,
+                  onPressed: () => _modify(context),
+                  child: Text(
+                    'Modifer',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Colors.blueGrey[200],
+                ),
+                FlatButton(
+                  minWidth: 0.3 * w,
+                  onPressed: () => remove(m),
+                  child: Text(
+                    'Supprimer',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Colors.red[300],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -184,7 +192,17 @@ class AttestPreview extends StatelessWidget {
       EditorScreen.routeName,
       arguments: m,
     );
-    modify(m, newM);
+    if (newM != null) modify(m, newM);
     Navigator.pop(context);
+  }
+
+  _openPDF(BuildContext context) async {
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+    final String path = '$dir/test.pdf';
+    return Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PdfViewerPage(path: path),
+      ),
+    );
   }
 }

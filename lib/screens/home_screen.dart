@@ -1,8 +1,8 @@
-import 'package:acfgen/screens/editor_screen.dart';
+import 'package:acfgen/utils/pdf_creator.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/att_list.dart';
-import '../widgets/editor.dart';
+import './editor_screen.dart';
 
 class Home extends StatefulWidget {
   static const routeName = "home-screen";
@@ -12,8 +12,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool isEditing = false;
-
   final _list = <Map>[];
 
   @override
@@ -33,7 +31,7 @@ class _HomeState extends State<Home> {
         ),
         centerTitle: true,
         title: Text(
-          'Attestation - Couvre Feu',
+          'Vos attestations',
           style: TextStyle(
             color: Colors.blueGrey,
             fontWeight: FontWeight.bold,
@@ -58,6 +56,7 @@ class _HomeState extends State<Home> {
     final res = await Navigator.of(context).pushNamed(EditorScreen.routeName);
     // print('$res');
     if (res == null) return;
+    PdfGenerator.reportView(context, res);
     setState(() {
       _list.add(res);
     });
@@ -67,6 +66,7 @@ class _HomeState extends State<Home> {
     setState(() {
       final i = _list.indexOf(old);
       _list[i] = m;
+      PdfGenerator.reportView(context, m);
     });
   }
 
@@ -81,18 +81,31 @@ class _HomeState extends State<Home> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Êtes vous sûr de vouloir supprimer cette attestation ?'),
-                Text('Cette action est irréversible.'),
+                Text(
+                  'Êtes vous sûr de vouloir supprimer cette attestation ?',
+                  style: TextStyle(fontSize: 15.0),
+                ),
+                Text(
+                  'Cette action est irréversible.',
+                  style: TextStyle(fontSize: 11.0),
+                ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Supprimer'),
+              child: Text(
+                'Supprimer',
+                style: TextStyle(color: Colors.redAccent),
+              ),
               onPressed: () => Navigator.of(context).pop(true),
             ),
             FlatButton(
-              child: Text('Annuler'),
+              color: Colors.blueAccent,
+              child: Text(
+                'Annuler',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () => Navigator.of(context).pop(false),
             ),
           ],
