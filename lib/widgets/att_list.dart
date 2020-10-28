@@ -34,17 +34,19 @@ class _AttestationListState extends State<AttestationList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(
-        child: ListView.builder(
-          itemCount: widget.list.length,
-          itemBuilder: (context, i) => GestureDetector(
-            child: AttestationItem(attestation: widget.list[i]),
-            onTap: _isPreviewOpen
-                ? null
-                : () => _onItemTap(context, widget.list[i]),
-          ),
-        ),
-      ),
+      child: widget.list.length == 0
+          ? Center(child: Text('Appuyer sur + pour créer une attestation.'))
+          : Center(
+              child: ListView.builder(
+                itemCount: widget.list.length,
+                itemBuilder: (context, i) => GestureDetector(
+                  child: AttestationItem(attestation: widget.list[i]),
+                  onTap: _isPreviewOpen
+                      ? null
+                      : () => _onItemTap(context, widget.list[i]),
+                ),
+              ),
+            ),
     );
   }
 

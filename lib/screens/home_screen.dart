@@ -116,6 +116,7 @@ class _HomeState extends State<Home> {
       },
     );
     // print('returned value dialog : $del');
+    if (del == null) return;
     if (del) {
       Navigator.pop(context);
       setState(() {
