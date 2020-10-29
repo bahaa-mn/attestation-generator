@@ -49,6 +49,7 @@ class _HomeState extends State<Home> {
         togglePreviewOpen: _toggleIsPreviewOpen,
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blueGrey,
         onPressed: _isPreviewOpen ? () => _modify(context) : _newAttestation,
         child: Icon(_isPreviewOpen ? Icons.mode_edit : Icons.add),
       ),

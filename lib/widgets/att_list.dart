@@ -33,17 +33,19 @@ class _AttestationListState extends State<AttestationList> {
 
   @override
   Widget build(BuildContext context) {
+    final n = widget.list.length;
+
     return Container(
-      child: widget.list.length == 0
-          ? Center(child: Text('Appuyer sur + pour créer une attestation.'))
+      child: n == 0
+          ? Center(child: Text('Appuyez sur + pour créer une attestation.'))
           : Center(
               child: ListView.builder(
-                itemCount: widget.list.length,
+                itemCount: n,
                 itemBuilder: (context, i) => GestureDetector(
-                  child: AttestationItem(attestation: widget.list[i]),
+                  child: AttestationItem(attestation: widget.list[n - 1 - i]),
                   onTap: _isPreviewOpen
                       ? null
-                      : () => _onItemTap(context, widget.list[i]),
+                      : () => _onItemTap(context, widget.list[n - 1 - i]),
                 ),
               ),
             ),
@@ -128,7 +130,7 @@ class AttestPreview extends StatelessWidget {
             SizedBox(height: 33),
             RichText(
               text: TextSpan(
-                text: '${m[MapAttrs.name]}  ',
+                text: '${m[MapAttrs.name].toString().toUpperCase()}  ',
                 style: TextStyle(
                   color: Colors.black87,
                   fontSize: 25.0,
@@ -149,7 +151,7 @@ class AttestPreview extends StatelessWidget {
             SizedBox(height: 33),
             RichText(
               text: TextSpan(
-                text: '${m[MapAttrs.motif]['short']} ',
+                text: '${m[MapAttrs.motif]['short'].toString().toUpperCase()} ',
                 style: TextStyle(
                   color: Colors.black87,
                   fontSize: 25.0,
@@ -176,7 +178,12 @@ class AttestPreview extends StatelessWidget {
               ),
             ),
             SizedBox(height: 13.0),
-            Row(
+            FlatButton(
+              color: Colors.blueGrey[100],
+              child: Text('Apperçu'),
+              onPressed: () => _printPDF(context),
+            ),
+            /* Row(
               children: [
                 Flexible(
                   flex: 1,
@@ -218,8 +225,8 @@ class AttestPreview extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            SizedBox(height: 17.0),
+            ), */
+            SizedBox(height: 13.0),
             FlatButton(
               onPressed: () => remove(m),
               child: Text(
@@ -234,7 +241,7 @@ class AttestPreview extends StatelessWidget {
     );
   }
 
-  _openPDF(BuildContext context) async {
+  /* _openPDF(BuildContext context) async {
     final fileName = Formats.fileName(m);
     final String dir = (await getApplicationDocumentsDirectory()).path;
     final String path = '$dir/$fileName.pdf';
@@ -244,14 +251,10 @@ class AttestPreview extends StatelessWidget {
         builder: (_) => PdfViewerPage(path: path),
       ),
     );
-  }
+  } */
 
-  _printPDF(BuildContext context) async {
-    final fileName = Formats.fileName(m);
-    final String dir = (await getApplicationDocumentsDirectory()).path;
-    final String path = '$dir/$fileName.pdf';
-    // print("zlkgjzlekjglksd   \t $path");
-    return Navigator.of(context).push(
+  _printPDF(BuildContext context) {
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => PrintPDF(data: m),
       ),

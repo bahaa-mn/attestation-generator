@@ -34,6 +34,7 @@ class _EditorScreenState extends State<EditorScreen> {
       ),
       body: editor,
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.blueGrey,
         onPressed: () => _validForm(context, editor),
         label: Text('Générer'),
       ),

@@ -194,7 +194,6 @@ class _EditorAttestationState extends State<EditorAttestation> {
                   flex: 1,
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(5.0),
                     child: Text(
                       'Date',
                       textAlign: TextAlign.left,
@@ -205,7 +204,6 @@ class _EditorAttestationState extends State<EditorAttestation> {
                   flex: 1,
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(5.0),
                     child: Text(
                       'Heure',
                       textAlign: TextAlign.left,

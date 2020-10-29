@@ -21,31 +21,32 @@ class _PrintPDFState extends State<PrintPDF> {
   @override
   Widget build(BuildContext context) {
     final title = Formats.fileName(widget.data);
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            title,
-            style: TextStyle(color: Colors.blueGrey),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          title,
+          style: TextStyle(color: Colors.blueGrey),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.blueGrey),
+        actionsIconTheme: IconThemeData(color: Colors.blueGrey),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.print),
+            onPressed: () async {
+              await Printing.layoutPdf(
+                onLayout: (format) async => _generatePdf(format, title),
+              );
+            },
           ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-        ),
-        body: PdfPreview(
-          canChangePageFormat: false,
-          // actions: [
-          //   PdfPreviewAction(
-          //     icon: Icon(Icons.print),
-          //     onPressed: (ctx, pdf, format) async {
-          //       await Printing.layoutPdf(
-          //         onLayout: (format) async => _generatePdf(format, title),
-          //       );
-          //     },
-          //   ),
-          // ],
-          build: (format) => _generatePdf(format, title),
-          // onPrinted: (context) {},
-        ),
+        ],
+      ),
+      body: PdfPreview(
+        canChangePageFormat: false,
+        useActions: false,
+        build: (format) => _generatePdf(format, title),
+        // onPrinted: (context) {},
       ),
     );
   }
