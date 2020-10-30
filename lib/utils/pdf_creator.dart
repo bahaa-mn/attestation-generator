@@ -49,7 +49,7 @@ class PdfGenerator {
                     ),
                   ),
                   Text(
-                    "En application de l'article 51 du décret n° 2020-1262 du 16 octobre 2020 prescrivant les mesures générales nécessaires pour faire face à l'épidémie de covid-19 dans le cadre de l'état d'urgence sanitaire",
+                    "En application du décret n°2020-1310 du 29 octobre 2020 prescrivant les mesures générales nécessaires pour faire face à l'épidémie de Covid19 dans le cadre de l'état d'urgence sanitaire",
                     textAlign: TextAlign.center,
                     style: subtitleStyle,
                   ),
@@ -83,7 +83,7 @@ class PdfGenerator {
                   // Text('Demeurant : $addresse', style: infoStyle),
                   SizedBox(height: 23.0),
                   Text(
-                    'certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé en application des mesures générales nécessaires pour faire face à l\'épidémie de Covid19 dans le cadre de l\'état d\'urgence sanitaire¹ :',
+                    'certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé par le décret n°2020-1310 du 29 octobre 2020 prescrivant les mesures générales nécessaires pour faire face à l\'épidémie de Covid19 dans le cadre de l\'état d\'urgence sanitaire¹ :',
                     style: infoStyle,
                   ),
                   SizedBox(height: 23.0),
@@ -142,7 +142,7 @@ class PdfGenerator {
                 ],
               ),
               Text(
-                '1 : Les personnes souhaitant bénéficier de l\'une de ces exceptions doivent se munir s\'il y a lieu, lors de leurs déplacements hors de leur domicile, d\'un document leur permettant de justifier que le déplacement considéré entre dans le champ de l\'une de ces exceptions',
+                '1 Les personnes souhaitant bénéficier de l\'une de ces exceptions doivent se munir s\'il y a lieu, lors de leurs déplacements hors de leur domicile, d\'un document leur permettant de justifier que le déplacement considéré entre dans le champ de l\'une de ces exceptions. \n 2 A utiliser par les travailleurs non-salariés, lorsqu\'ils ne peuvent disposer d\'un justificatif de déplacement établi par leur employeur. \n 3 Y compris les acquisitions à titre gratuit (distribution de denrées alimentaires...) et les déplacements liés à la perception de prestations sociales et au retrait d\'espèces.',
                 style: TextStyle(fontSize: 7.0),
               ),
             ],

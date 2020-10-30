@@ -93,7 +93,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
         child: ListView(
           physics: ClampingScrollPhysics(),
           children: [
-            SizedBox(height: h * 0.15),
+            SizedBox(height: h * 0.1),
             TextFormField(
               controller: _nameController,
               decoration: InputDecoration(

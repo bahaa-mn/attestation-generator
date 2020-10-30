@@ -180,7 +180,7 @@ class AttestPreview extends StatelessWidget {
             SizedBox(height: 13.0),
             FlatButton(
               color: Colors.blueGrey[100],
-              child: Text('Apperçu'),
+              child: Text('Aperçu'),
               onPressed: () => _printPDF(context),
             ),
             /* Row(
