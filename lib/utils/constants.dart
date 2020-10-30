@@ -69,3 +69,8 @@ class MapAttrs {
   static const motif = 'motif';
   static const lastModif = 'last-modification';
 }
+
+class SharedPrefConst{
+
+  static const listKey = 'shared-list-key';
+}

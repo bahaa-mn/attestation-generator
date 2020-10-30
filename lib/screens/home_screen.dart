@@ -1,8 +1,12 @@
-import 'package:acfgen/utils/pdf_creator.dart';
+import 'dart:convert';
+
+import 'package:acfgen/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/att_list.dart';
 import './editor_screen.dart';
+import '../utils/pdf_creator.dart';
 
 class Home extends StatefulWidget {
   static const routeName = "home-screen";
@@ -20,8 +24,14 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // get data from memory to set the list
+    _readData();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _saveData();
+    super.dispose();
   }
 
   @override
@@ -54,6 +64,22 @@ class _HomeState extends State<Home> {
         child: Icon(_isPreviewOpen ? Icons.mode_edit : Icons.add),
       ),
     );
+  }
+
+  _saveData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final data = {
+      'list': _list,
+    };
+    final strData = json.encode(data);
+    prefs.setString(SharedPrefConst.listKey, strData);
+  }
+
+  _readData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final strData = prefs.getString(SharedPrefConst.listKey);
+    final data = json.decode(strData);
+    (data['list'] as List<Map>).forEach((e) => _list.add(e));
   }
 
   void _newAttestation() async {
