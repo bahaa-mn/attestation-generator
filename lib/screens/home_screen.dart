@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:acfgen/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' as pth;
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 import '../widgets/att_list.dart';
 import './editor_screen.dart';
@@ -24,14 +26,19 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    _readData();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _saveData();
-    super.dispose();
+  Future<Database> _database() async {
+    return openDatabase(
+      pth.join(await getDatabasesPath(), 'attestations_database.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE ${DatabaseConst.name} (${DatabaseConst.id} INTEGER PRIMARY KEY, ${MapAttrs.name} TEXT, ${MapAttrs.addresse} TEXT,${MapAttrs.birthCity} TEXT,${MapAttrs.birthday} TEXT, ${MapAttrs.date} TEXT, ${MapAttrs.heure} TEXT, ${MapAttrs.city} TEXT, ${DatabaseConst.motifId} INTEGER, ${MapAttrs.lastModif} TEXT)",
+        );
+      },
+      version: 1,
+    );
   }
 
   @override
@@ -52,11 +59,20 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: AttestationList(
-        list: _list,
-        remove: _removeAttestation,
-        modify: _modifyAttestation,
-        togglePreviewOpen: _toggleIsPreviewOpen,
+      body: FutureBuilder(
+        future: _readAttestations(),
+        builder: (context, _) {
+          if (_list.length == 0)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          return AttestationList(
+            list: _list,
+            remove: _removeAttestation,
+            modify: _modifyAttestation,
+            togglePreviewOpen: _toggleIsPreviewOpen,
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blueGrey,
@@ -66,41 +82,91 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _saveData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final data = {
-      'list': _list,
-    };
-    final strData = json.encode(data);
-    prefs.setString(SharedPrefConst.listKey, strData);
+  DateTime todTOdt(TimeOfDay t) {
+    final now = new DateTime.now();
+    return new DateTime(now.year, now.month, now.day, t.hour, t.minute);
   }
 
-  _readData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final strData = prefs.getString(SharedPrefConst.listKey);
-    final data = json.decode(strData);
-    (data['list'] as List<Map>).forEach((e) => _list.add(e));
+  TimeOfDay dtTOtod(DateTime d) {
+    return TimeOfDay(hour: d.hour, minute: d.minute);
+  }
+
+  Map<String, dynamic> attestationToDBMap(Map m) {
+    final i = _list.indexOf(m);
+    return {
+      DatabaseConst.id: '$i',
+      MapAttrs.name: m[MapAttrs.name],
+      MapAttrs.addresse: m[MapAttrs.addresse],
+      MapAttrs.birthCity: m[MapAttrs.birthCity],
+      MapAttrs.birthday: (m[MapAttrs.birthday] as DateTime).toIso8601String(),
+      MapAttrs.date: (m[MapAttrs.date] as DateTime).toIso8601String(),
+      MapAttrs.heure: todTOdt(m[MapAttrs.heure]).toIso8601String(),
+      MapAttrs.city: m[MapAttrs.city],
+      DatabaseConst.motifId: MotifValue.list.indexOf(m[MapAttrs.motif]),
+      MapAttrs.lastModif: (m[MapAttrs.lastModif] as DateTime).toIso8601String(),
+    };
+  }
+
+  Future _readAttestations() async {
+    if (_list.length != 0) return;
+    final Database db = await _database();
+    final List<Map<String, dynamic>> maps = await db.query(DatabaseConst.name);
+    maps.forEach((e) {
+      Map m = {
+        MapAttrs.name: e[MapAttrs.name],
+        MapAttrs.addresse: e[MapAttrs.addresse],
+        MapAttrs.birthCity: e[MapAttrs.birthCity],
+        MapAttrs.birthday: DateTime.parse(e[MapAttrs.birthday]),
+        MapAttrs.date: DateTime.parse(e[MapAttrs.date]),
+        MapAttrs.heure: dtTOtod(DateTime.parse(e[MapAttrs.heure])),
+        MapAttrs.city: e[MapAttrs.city],
+        MapAttrs.motif: MotifValue.list[e[DatabaseConst.motifId]],
+        MapAttrs.lastModif: DateTime.parse(e[MapAttrs.lastModif]),
+      };
+      _list.add(m);
+    });
+  }
+
+  _saveAttestation(Map m) async {
+    final Database db = await _database();
+
+    await db.insert(
+      DatabaseConst.name,
+      attestationToDBMap(m),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   void _newAttestation() async {
     final res = await Navigator.of(context).pushNamed(EditorScreen.routeName);
     // print('$res');
     if (res == null) return;
-    PdfGenerator.saveFile(context, res);
+    // PdfGenerator.saveFile(context, res);
     setState(() {
       _list.add(res);
     });
+    _saveAttestation(res);
   }
 
-  void _modifyAttestation(Map old, Map m) {
+  void _modifyAttestation(Map old, Map m) async {
+    final i = _list.indexOf(old);
     setState(() {
-      final i = _list.indexOf(old);
       _list[i] = m;
       PdfGenerator.saveFile(context, m);
     });
+    final db = await _database();
+    // Update the given attestation.
+    await db.update(
+      DatabaseConst.name,
+      attestationToDBMap(m),
+      // Ensure that the attestation has a matching id.
+      where: "id = ?",
+      whereArgs: [i],
+    );
   }
 
   void _removeAttestation(Map m) async {
+    final i = _list.indexOf(m);
     // Navigator.pop(context);
     final del = await showDialog<bool>(
       context: context,
@@ -149,6 +215,15 @@ class _HomeState extends State<Home> {
       setState(() {
         _list.remove(m);
       });
+      final db = await _database();
+      // Remove the Dog from the Database.
+      await db.delete(
+        DatabaseConst.name,
+        // Use a `where` clause to delete a specific dog.
+        where: "id = ?",
+        // Pass the Dog's id as a whereArg to prevent SQL injection.
+        whereArgs: [i],
+      );
     }
   }
 

@@ -1,0 +1,40 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_full_pdf_viewer (1.0.1):
+    - Flutter
+  - path_provider (0.0.1):
+    - Flutter
+  - printing (0.0.1):
+    - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_full_pdf_viewer (from `.symlinks/plugins/flutter_full_pdf_viewer/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - printing (from `.symlinks/plugins/printing/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_full_pdf_viewer:
+    :path: ".symlinks/plugins/flutter_full_pdf_viewer/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  printing:
+    :path: ".symlinks/plugins/printing/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_full_pdf_viewer: 1b65139fc3236cde300ba6bea2a72669cb07f2e6
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  printing: 5ec249946ebbd51cead5ed9b0b48113bb5141bcf
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.9.3

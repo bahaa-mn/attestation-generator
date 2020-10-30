@@ -42,10 +42,10 @@ class _AttestationListState extends State<AttestationList> {
               child: ListView.builder(
                 itemCount: n,
                 itemBuilder: (context, i) => GestureDetector(
-                  child: AttestationItem(attestation: widget.list[n - 1 - i]),
+                  child: AttestationItem(attestation: widget.list[i]),
                   onTap: _isPreviewOpen
                       ? null
-                      : () => _onItemTap(context, widget.list[n - 1 - i]),
+                      : () => _onItemTap(context, widget.list[i]),
                 ),
               ),
             ),

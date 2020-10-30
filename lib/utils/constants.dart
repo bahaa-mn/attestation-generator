@@ -62,15 +62,16 @@ class MapAttrs {
   static const name = 'name';
   static const addresse = 'adresse';
   static const birthday = 'birthday';
-  static const birthCity = 'birth-city';
+  static const birthCity = 'birthCity';
   static const date = 'date';
   static const heure = 'heure';
   static const city = 'city';
   static const motif = 'motif';
-  static const lastModif = 'last-modification';
+  static const lastModif = 'lastModification';
 }
 
-class SharedPrefConst{
-
-  static const listKey = 'shared-list-key';
+class DatabaseConst {
+  static const name = 'attestation';
+  static const id = 'id';
+  static const motifId = 'motifId';
 }
