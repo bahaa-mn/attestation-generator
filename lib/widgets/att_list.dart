@@ -1,7 +1,7 @@
 import 'package:acfgen/screens/print_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/formtateurs.dart';
+import '../utils/formateurs.dart';
 import '../screens/home_screen.dart';
 import '../utils/constants.dart';
 import './att_item.dart';

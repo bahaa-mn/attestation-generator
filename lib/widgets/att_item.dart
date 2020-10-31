@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../utils/constants.dart';
-import '../utils/formtateurs.dart';
+import '../utils/formateurs.dart';
 
 class AttestationItem extends StatelessWidget {
   final Map attestation;

@@ -5,7 +5,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-import '../utils/formtateurs.dart';
+import '../utils/formateurs.dart';
 import '../utils/pdf_creator.dart';
 
 class PrintPDF extends StatefulWidget {

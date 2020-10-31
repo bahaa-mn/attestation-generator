@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import './constants.dart';
+import 'constants.dart';
 
 class Formats {
   static String date(DateTime d) => '${DateFormat('dd.MM.yyyy').format(d)}';

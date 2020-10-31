@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/constants.dart';
-import '../utils/formtateurs.dart';
+import '../utils/formateurs.dart';
 
 class EditorAttestation extends StatefulWidget {
   final Map m;

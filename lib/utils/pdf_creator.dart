@@ -4,7 +4,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../utils/formtateurs.dart';
+import 'formateurs.dart';
 import '../utils/constants.dart';
 
 class PdfGenerator {
