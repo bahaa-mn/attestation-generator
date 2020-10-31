@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'constants.dart';
 
 class Formats {
-  static String date(DateTime d) => '${DateFormat('dd.MM.yyyy').format(d)}';
+  static String date(DateTime d) => '${DateFormat('dd/MM/yyyy').format(d)}';
 
   static String heure(TimeOfDay t) =>
       '${NumberFormat('00').format(t.hour)}:${NumberFormat('00').format(t.minute)}';

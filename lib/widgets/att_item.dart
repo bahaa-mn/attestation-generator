@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+// import 'package:pdf/widgets.dart';
 
 import '../utils/constants.dart';
 import '../utils/formateurs.dart';
@@ -31,7 +32,7 @@ class AttestationItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    '${DateFormat('dd/MM/yyyy - HH:mm').format(attestation[MapAttrs.date])}',
+                    '${Formats.date(attestation[MapAttrs.date])}',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -58,9 +59,22 @@ class AttestationItem extends StatelessWidget {
             child: Container(
               width: double.infinity,
               alignment: Alignment.bottomRight,
-              child: Text(
-                'Dernière modif. : ${DateFormat("dd/MM/yyyy - HH:mm").format(attestation[MapAttrs.lastModif])}',
-                style: TextStyle(fontSize: 11.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${Formats.heure(attestation[MapAttrs.heure])}',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Dernière modif. : ${DateFormat("dd/MM/yyyy - HH:mm").format(attestation[MapAttrs.lastModif])}',
+                    style: TextStyle(fontSize: 11.0),
+                  ),
+                ],
               ),
             ),
           ),
