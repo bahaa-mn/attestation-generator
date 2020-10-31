@@ -10,5 +10,5 @@ class Formats {
       '${NumberFormat('00').format(t.hour)}:${NumberFormat('00').format(t.minute)}';
 
   static String fileName(Map data) =>
-      '${data[MapAttrs.motif]['short'].toString().toLowerCase().substring(0, 3)}_${Formats.date(data[MapAttrs.date]).replaceAll('.', '')}${Formats.heure(data[MapAttrs.heure]).replaceAll(':', '')}_${data[MapAttrs.name].toString().substring(0, 3).toLowerCase()}';
+      '${data[MapAttrs.motif]['short'].toString().toLowerCase().substring(0, 3)}${data[MapAttrs.name].toString().substring(0, 3).toLowerCase()}_${Formats.date(data[MapAttrs.date]).replaceAll('.', '')}${Formats.heure(data[MapAttrs.heure]).replaceAll(':', '')}';
 }
