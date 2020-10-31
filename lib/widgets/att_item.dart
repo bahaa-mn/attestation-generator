@@ -31,18 +31,22 @@ class AttestationItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    '${DateFormat('dd/MM/yyyy').format(attestation[MapAttrs.date])}',
+                    '${DateFormat('dd/MM/yyyy - HH:mm').format(attestation[MapAttrs.date])}',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   AutoSizeText(
-                    '${attestation[MapAttrs.motif]['short']}',
+                    '${attestation[MapAttrs.name]}',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 1,
                   ),
                   AutoSizeText(
-                    '${attestation[MapAttrs.name]}',
+                    '${attestation[MapAttrs.motif]['short']}',
                     maxLines: 1,
                   ),
                 ],
@@ -55,7 +59,7 @@ class AttestationItem extends StatelessWidget {
               width: double.infinity,
               alignment: Alignment.bottomRight,
               child: Text(
-                'Dernière modification : ${DateFormat("dd.MM.yyyy - HH:mm").format(attestation[MapAttrs.lastModif])}',
+                'Dernière modif. : ${DateFormat("dd/MM/yyyy - HH:mm").format(attestation[MapAttrs.lastModif])}',
                 style: TextStyle(fontSize: 11.0),
               ),
             ),

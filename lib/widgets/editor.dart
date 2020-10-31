@@ -93,7 +93,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
         child: ListView(
           physics: ClampingScrollPhysics(),
           children: [
-            SizedBox(height: 7.0),
+            SizedBox(height: 25.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -129,12 +129,12 @@ class _EditorAttestationState extends State<EditorAttestation> {
                 fontSize: 13.0,
               ),
             ),
-            SizedBox(height: h * 0.10),
+            SizedBox(height: h * 0.03),
             TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: "Mme/Mr",
-                hintText: "NOM Prénom",
+                hintText: "Martin DUPONT",
                 border: inputBorder,
               ),
               textInputAction: TextInputAction.next,
@@ -180,7 +180,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
                     controller: _birthCityController,
                     decoration: InputDecoration(
                       labelText: 'à',
-                      hintText: 'Ville',
+                      hintText: 'Nice',
                       border: inputBorder,
                     ),
                     textInputAction: TextInputAction.next,
@@ -198,7 +198,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
               controller: _addressController,
               decoration: InputDecoration(
                 labelText: "Adresse",
-                hintText: "n° de rue, Rue, Ville, Code postal",
+                hintText: "14 avenue de la liberté, Paris 75012",
                 border: inputBorder,
               ),
               textInputAction: TextInputAction.next,
@@ -214,7 +214,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
               controller: _cityController,
               decoration: InputDecoration(
                 labelText: 'Fait à',
-                hintText: 'Ville',
+                hintText: 'Paris',
                 border: inputBorder,
               ),
               focusNode: _cityNode,
