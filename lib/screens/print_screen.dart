@@ -45,6 +45,7 @@ class _PrintPDFState extends State<PrintPDF> {
       body: PdfPreview(
         canChangePageFormat: false,
         useActions: false,
+        pdfFileName: Formats.fileName(widget.data),
         build: (format) => _generatePdf(format, title),
         // onPrinted: (context) {},
       ),
