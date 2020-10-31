@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:acfgen/screens/print_screen.dart';
 import 'package:acfgen/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as pth;
@@ -78,6 +79,7 @@ class _HomeState extends State<Home> {
             remove: _removeAttestation,
             modify: _modifyAttestation,
             togglePreviewOpen: _toggleIsPreviewOpen,
+            printPdf: _printPDF,
           );
         },
       ),
@@ -85,6 +87,14 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.blueGrey,
         onPressed: _isPreviewOpen ? () => _modify(context) : _newAttestation,
         child: Icon(_isPreviewOpen ? Icons.mode_edit : Icons.add),
+      ),
+    );
+  }
+
+  _printPDF(BuildContext context, Map m) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PrintPDF(data: m),
       ),
     );
   }
@@ -145,14 +155,13 @@ class _HomeState extends State<Home> {
   }
 
   void _newAttestation() async {
-    final res = await Navigator.of(context).pushNamed(EditorScreen.routeName);
+    final m = await Navigator.of(context).pushNamed(EditorScreen.routeName);
     // print('$res');
-    if (res == null) return;
+    if (m == null) return;
     // PdfGenerator.saveFile(context, res);
-    setState(() {
-      _list.add(res);
-    });
-    _saveAttestation(res);
+    _list.add(m);
+    _saveAttestation(m);
+    _printPDF(context, m);
   }
 
   void _modifyAttestation(Map old, Map m) async {

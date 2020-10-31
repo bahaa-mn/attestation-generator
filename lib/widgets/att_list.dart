@@ -1,15 +1,10 @@
-import 'dart:io';
-
+import 'package:acfgen/screens/print_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'package:path_provider/path_provider.dart';
-
-import '../screens/print_screen.dart';
 import '../utils/formtateurs.dart';
 import '../screens/home_screen.dart';
 import '../utils/constants.dart';
 import './att_item.dart';
-import './pdf_viewer.dart';
 import 'package:intl/intl.dart';
 
 class AttestationList extends StatefulWidget {
@@ -17,12 +12,14 @@ class AttestationList extends StatefulWidget {
   final Function(Map old, Map m) modify;
   final Function(Map m) remove;
   final Function(bool open, Map m) togglePreviewOpen;
+  final Function(BuildContext, Map) printPdf;
 
   AttestationList({
     @required this.list,
     @required this.remove,
     @required this.modify,
     @required this.togglePreviewOpen,
+    @required this.printPdf,
   });
 
   @override
@@ -63,6 +60,7 @@ class _AttestationListState extends State<AttestationList> {
         m: m,
         modify: widget.modify,
         remove: widget.remove,
+        printPdf: widget.printPdf,
       ),
     );
     await sheet.closed;
@@ -75,12 +73,14 @@ class AttestPreview extends StatelessWidget {
   final Map m;
   final Function(Map old, Map m) modify;
   final Function(Map m) remove;
+  final Function(BuildContext, Map) printPdf;
 
   const AttestPreview({
     Key key,
     @required this.m,
     @required this.modify,
     @required this.remove,
+    @required this.printPdf,
   }) : super(key: key);
 
   @override
@@ -182,51 +182,8 @@ class AttestPreview extends StatelessWidget {
             FlatButton(
               color: Colors.blueGrey[100],
               child: Text('Aperçu'),
-              onPressed: () => _printPDF(context),
+              onPressed: () => printPdf(context, m),
             ),
-            /* Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    width: double.infinity,
-                    constraints: BoxConstraints(maxHeight: 35),
-                    child: FlatButton(
-                      color: Colors.blueGrey[100],
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('Apperçu'),
-                          Icon(Icons.insert_drive_file),
-                        ],
-                      ),
-                      onPressed: () => _openPDF(context),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 17.0),
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: FlatButton(
-                      color: Colors.blueGrey[100],
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('Imprimer'),
-                          Icon(Icons.print),
-                        ],
-                      ),
-                      onPressed: () => _printPDF(context),
-                    ),
-                  ),
-                ),
-              ],
-            ), */
             SizedBox(height: 13.0),
             FlatButton(
               onPressed: () => remove(m),
@@ -238,26 +195,6 @@ class AttestPreview extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  /* _openPDF(BuildContext context) async {
-    final fileName = Formats.fileName(m);
-    final String dir = (await getApplicationDocumentsDirectory()).path;
-    final String path = '$dir/$fileName.pdf';
-    // print("zlkgjzlekjglksd   \t $path");
-    return Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => PdfViewerPage(path: path),
-      ),
-    );
-  } */
-
-  _printPDF(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => PrintPDF(data: m),
       ),
     );
   }
