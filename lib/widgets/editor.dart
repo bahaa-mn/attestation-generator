@@ -93,11 +93,48 @@ class _EditorAttestationState extends State<EditorAttestation> {
         child: ListView(
           physics: ClampingScrollPhysics(),
           children: [
-            SizedBox(height: h * 0.1),
+            SizedBox(height: 7.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(flex: 1, child: Text('Motif')),
+                Flexible(
+                  flex: 5,
+                  child: DropdownButton(
+                    value: _selectedMotif,
+                    isExpanded: true,
+                    hint: Text('${_selectedMotif['short']}'),
+                    items: MotifValue.list
+                        .map<DropdownMenuItem<Map>>(
+                          (Map e) => DropdownMenuItem<Map>(
+                            value: e,
+                            child: Text('${e['short']}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (Map i) {
+                      //print('lskdjgslkdjg  $i $selectedMotif');
+                      setState(() {
+                        _selectedMotif = i;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              '${_selectedMotif['long']}',
+              style: TextStyle(
+                color: Colors.blueGrey[300],
+                fontSize: 13.0,
+              ),
+            ),
+            SizedBox(height: h * 0.10),
             TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: "Mme/Mr",
+                hintText: "NOM Prénom",
                 border: inputBorder,
               ),
               textInputAction: TextInputAction.next,
@@ -161,6 +198,7 @@ class _EditorAttestationState extends State<EditorAttestation> {
               controller: _addressController,
               decoration: InputDecoration(
                 labelText: "Adresse",
+                hintText: "n° de rue, Rue, Ville, Code postal",
                 border: inputBorder,
               ),
               textInputAction: TextInputAction.next,
@@ -256,42 +294,6 @@ class _EditorAttestationState extends State<EditorAttestation> {
                   ),
                 ),
               ],
-            ),
-            SizedBox(height: 7.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(flex: 1, child: Text('Motif')),
-                Flexible(
-                  flex: 5,
-                  child: DropdownButton(
-                    value: _selectedMotif,
-                    isExpanded: true,
-                    hint: Text('${_selectedMotif['short']}'),
-                    items: MotifValue.list
-                        .map<DropdownMenuItem<Map>>(
-                          (Map e) => DropdownMenuItem<Map>(
-                            value: e,
-                            child: Text('${e['short']}'),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (Map i) {
-                      //print('lskdjgslkdjg  $i $selectedMotif');
-                      setState(() {
-                        _selectedMotif = i;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              '${_selectedMotif['long']}',
-              style: TextStyle(
-                color: Colors.blueGrey[300],
-                fontSize: 13.0,
-              ),
             ),
           ],
         ),

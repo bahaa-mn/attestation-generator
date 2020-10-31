@@ -31,9 +31,9 @@ class AttestationItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    '${Formats.date(attestation[MapAttrs.date])}',
+                    '${DateFormat('dd/MM/yyyy').format(attestation[MapAttrs.date])}',
                     style: TextStyle(
-                      fontSize: 17.0,
+                      fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

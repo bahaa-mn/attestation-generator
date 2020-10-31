@@ -10,6 +10,7 @@ import '../screens/home_screen.dart';
 import '../utils/constants.dart';
 import './att_item.dart';
 import './pdf_viewer.dart';
+import 'package:intl/intl.dart';
 
 class AttestationList extends StatefulWidget {
   final List<Map> list;
@@ -109,10 +110,10 @@ class AttestPreview extends StatelessWidget {
             RichText(
               textAlign: TextAlign.left,
               text: TextSpan(
-                text: '${Formats.date(m[MapAttrs.date])} ',
+                text: '${DateFormat('dd/MM/yyyy ').format(m[MapAttrs.date])}',
                 style: TextStyle(
                   color: Colors.black87,
-                  fontSize: 23.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
@@ -133,7 +134,7 @@ class AttestPreview extends StatelessWidget {
                 text: '${m[MapAttrs.name].toString().toUpperCase()}  ',
                 style: TextStyle(
                   color: Colors.black87,
-                  fontSize: 25.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
@@ -154,7 +155,7 @@ class AttestPreview extends StatelessWidget {
                 text: '${m[MapAttrs.motif]['short'].toString().toUpperCase()} ',
                 style: TextStyle(
                   color: Colors.black87,
-                  fontSize: 25.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [

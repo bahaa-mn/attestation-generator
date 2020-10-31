@@ -54,6 +54,7 @@ class _HomeState extends State<Home> {
           style: TextStyle(
             color: Colors.blueGrey,
             fontWeight: FontWeight.bold,
+            fontSize: 25,
           ),
         ),
         backgroundColor: Colors.white,
@@ -64,8 +65,14 @@ class _HomeState extends State<Home> {
         builder: (context, _) {
           if (_list.length == 0)
             return Center(
-              child: CircularProgressIndicator(),
-            );
+                //child: CircularProgressIndicator(),
+                child: Text(
+              'Appuyer sur + pour créer une attestation',
+              style: TextStyle(
+                color: Colors.blueGrey,
+                fontWeight: FontWeight.bold,
+              ),
+            ));
           return AttestationList(
             list: _list,
             remove: _removeAttestation,
