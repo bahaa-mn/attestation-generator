@@ -159,7 +159,9 @@ class _HomeState extends State<Home> {
     // print('$res');
     if (m == null) return;
     // PdfGenerator.saveFile(context, res);
-    _list.add(m);
+    setState(() {
+      _list.add(m);
+    });
     _saveAttestation(m);
     _printPDF(context, m);
   }
@@ -168,7 +170,7 @@ class _HomeState extends State<Home> {
     final i = _list.indexOf(old);
     setState(() {
       _list[i] = m;
-      PdfGenerator.saveFile(context, m);
+      // PdfGenerator.saveFile(context, m);
     });
     final db = await _database();
     // Update the given attestation.
@@ -259,5 +261,6 @@ class _HomeState extends State<Home> {
     _toggleIsPreviewOpen(false, newM);
     if (newM == null) return;
     _modifyAttestation(_previewedAttest, newM);
+    _printPDF(context, newM);
   }
 }

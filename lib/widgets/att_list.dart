@@ -93,7 +93,7 @@ class AttestPreview extends StatelessWidget {
         borderRadius: BorderRadius.circular(13.0),
         color: Colors.blueGrey[50],
       ),
-      // height: h,
+      height: h,
       width: w,
       padding: const EdgeInsets.only(
         left: 17.0,
@@ -102,99 +102,120 @@ class AttestPreview extends StatelessWidget {
         bottom: 7.0,
       ),
       margin: const EdgeInsets.all(7.0),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            RichText(
-              textAlign: TextAlign.left,
-              text: TextSpan(
-                text: '${DateFormat('dd/MM/yyyy ').format(m[MapAttrs.date])}',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            flex: 5,
+            child: Container(
+              height: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextSpan(
-                    text: '${Formats.heure(m[MapAttrs.heure])}',
+                  RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
+                      text:
+                          '${DateFormat('dd/MM/yyyy ').format(m[MapAttrs.date])}',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: '${Formats.heure(m[MapAttrs.heure])}',
+                          style: TextStyle(
+                            color: Colors.black38,
+                            fontSize: 17.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 33),
+                  RichText(
+                    text: TextSpan(
+                      text: '${m[MapAttrs.name].toString().toUpperCase()}  ',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Mme/Mr',
+                          style: TextStyle(
+                            color: Colors.blueGrey[500],
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 33),
+                  RichText(
+                    text: TextSpan(
+                      text:
+                          '${m[MapAttrs.motif]['short'].toString().toUpperCase()} ',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Motif',
+                          style: TextStyle(
+                            color: Colors.blueGrey[500],
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    '${m[MapAttrs.motif]['long']}',
                     style: TextStyle(
                       color: Colors.black38,
-                      fontSize: 17.0,
+                      fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 33),
-            RichText(
-              text: TextSpan(
-                text: '${m[MapAttrs.name].toString().toUpperCase()}  ',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
+          ),
+          Flexible(
+            flex: 1,
+            child: Container(
+              height: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextSpan(
-                    text: 'Mme/Mr',
-                    style: TextStyle(
-                      color: Colors.blueGrey[500],
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.bold,
+                  FlatButton(
+                    color: Colors.blueGrey[100],
+                    child: Text('Aperçu'),
+                    onPressed: () => printPdf(context, m),
+                  ),
+                  SizedBox(height: 13.0),
+                  FlatButton(
+                    onPressed: () => remove(m),
+                    child: Text(
+                      'Supprimer',
+                      style: TextStyle(color: Colors.white),
                     ),
+                    color: Colors.redAccent,
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 33),
-            RichText(
-              text: TextSpan(
-                text: '${m[MapAttrs.motif]['short'].toString().toUpperCase()} ',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                children: [
-                  TextSpan(
-                    text: 'Motif',
-                    style: TextStyle(
-                      color: Colors.blueGrey[500],
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              '${m[MapAttrs.motif]['long']}',
-              style: TextStyle(
-                color: Colors.black38,
-                fontSize: 15.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 13.0),
-            FlatButton(
-              color: Colors.blueGrey[100],
-              child: Text('Aperçu'),
-              onPressed: () => printPdf(context, m),
-            ),
-            SizedBox(height: 13.0),
-            FlatButton(
-              onPressed: () => remove(m),
-              child: Text(
-                'Supprimer',
-                style: TextStyle(color: Colors.white),
-              ),
-              color: Colors.redAccent,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
